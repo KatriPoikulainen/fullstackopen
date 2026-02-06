@@ -1,14 +1,28 @@
 import { useState } from 'react'
 
+const Button = (props) => (
+  <button onClick={props.onClick}>{props.text}</button>
+)
+
+const StatisticLine = (props) => (
+  <p>
+    {props.text} {props.value}
+  </p>
+)
+
 const Statistics = (props) => {
+  if (props.yhteensa === 0) {
+    return <p>palautetta ei annettu</p>
+  }
+
   return(
   <div>
-      <p>hyva {props.hyva}</p>
-      <p>neutraali {props.neutraali}</p>
-      <p>huono {props.huono}</p>
-      <p>yhteensa {props.yhteensa}</p>
-      <p>keskiarvo {props.keskiarvo}</p>
-      <p>tyytyvaisyys {props.tyytyvaisyys} %</p>
+      <StatisticLine text="hyva" value={props.hyva}/>
+      <StatisticLine text="neutraali" value={props.neutraali}/>
+      <StatisticLine text="huono" value={props.huono}/>
+      <StatisticLine text="yhteensa" value={props.yhteensa}/>
+      <StatisticLine text="keskiarvo" value={props.keskiarvo}/>
+      <StatisticLine text="tyytyvaisyys" value={props.tyytyvaisyys + " % "}/>
   </div>
 
   )
@@ -19,21 +33,17 @@ const App = () => {
   const [neutraali, setNeutraali] = useState(0)
   const [huono, setHuono] = useState(0)
   const yhteensa = hyva+neutraali+huono
-  const keskiarvo = yhteensa === 0 ? 0 : (hyva-huono)/yhteensa
+  const keskiarvo = yhteensa === 0 ? 0 : (hyva-huono) / yhteensa
   const tyytyvaisyys = yhteensa === 0 ? 0 : (hyva/yhteensa) * 100
 
   return (
     <div>
       <h1>anna meille palautetta</h1>
-      <button onClick={() =>setHyva(hyva+1)}>hyva</button>
-      <button onClick={()=> setNeutraali(neutraali+1)}>neutraali</button>
-      <button onClick={()=> setHuono(huono+1)}>huono</button>
+      <Button onClick={() =>setHyva(hyva+1)} text="hyva"/>
+      <Button onClick={()=> setNeutraali(neutraali+1)} text="neutraali"/>
+      <Button onClick={()=> setHuono(huono+1)} text="huono"/>
 
       <h2>tilastot</h2>
-
-      {yhteensa === 0 ? (
-        <p>palautetta ei annettu</p>
-      ) : (
 
       <Statistics
       hyva= {hyva}
@@ -43,7 +53,6 @@ const App = () => {
       keskiarvo= {keskiarvo}
       tyytyvaisyys= {tyytyvaisyys}
       />
-      )}
 
     </div>
   )
