@@ -5,9 +5,10 @@ const Button = (props) => (
 )
 
 const StatisticLine = (props) => (
-  <p>
-    {props.text} {props.value}
-  </p>
+  <tr>
+    <td>{props.text}</td> 
+    <td>{props.value}</td>
+  </tr>
 )
 
 const Statistics = (props) => {
@@ -16,14 +17,16 @@ const Statistics = (props) => {
   }
 
   return(
-  <div>
+    <table>
+      <tbody>
       <StatisticLine text="hyva" value={props.hyva}/>
       <StatisticLine text="neutraali" value={props.neutraali}/>
       <StatisticLine text="huono" value={props.huono}/>
       <StatisticLine text="yhteensa" value={props.yhteensa}/>
       <StatisticLine text="keskiarvo" value={props.keskiarvo}/>
-      <StatisticLine text="tyytyvaisyys" value={props.tyytyvaisyys + " % "}/>
-  </div>
+      <StatisticLine text="tyytyvaisyys" value={props.tyytyvaisyys + " %"}/>
+      </tbody>
+    </table>
 
   )
 }
@@ -57,5 +60,6 @@ const App = () => {
     </div>
   )
 }
+
 
 export default App
