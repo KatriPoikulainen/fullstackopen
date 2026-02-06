@@ -31,6 +31,10 @@ const App = () => {
 
       <h2>tilastot</h2>
 
+      {yhteensa === 0 ? (
+        <p>palautetta ei annettu</p>
+      ) : (
+
       <Statistics
       hyva= {hyva}
       neutraali= {neutraali}
@@ -39,6 +43,7 @@ const App = () => {
       keskiarvo= {keskiarvo}
       tyytyvaisyys= {tyytyvaisyys}
       />
+      )}
 
     </div>
   )
