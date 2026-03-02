@@ -34,7 +34,7 @@ const PersonForm = (props) => (
 
 const Persons = (props) => (
   <ul>
-    {props.personsToShow.map(person=> (
+    {props.personsToShow.map((person)=> (
       <li key={person.id}>
         {person.name} {person.number}
       </li>
@@ -44,41 +44,35 @@ const Persons = (props) => (
 
 const App = () => {
   const [persons, setPersons] = useState([])
-  
-  useEffect (()=> {
-    axios
-    .get('http://localhost:3001/persons')
-    .then(response=> {
-      setPersons(response.data)
-    })
-  }, [])
-
   const [filter, setFilter] = useState('')
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState ('')
 
+  useEffect(()=> {
+    axios.get(`http://localhost:3001/persons`).then((response) => {
+      setPersons(response.data)
+    })
+  }, [])
+
   const addPerson = (event) => {
     event.preventDefault()
 
-    const nameExists = persons.some (
-      person => person.name === newName
-    )
-
+    const nameExists = persons.some((person) => person.name === newName)
     if (nameExists) {
-    alert(`${newName} is already added to phonebook`)
-    return
+      alert(`${newName} is already added to phonebook`)
+      return
     }
 
-
     const personObject = {
-      id: persons.length +1,
       name: newName,
       number: newNumber
     }
 
-    setPersons (persons.concat(personObject))
-    setNewName('')
-    setNewNumber('')
+    axios.post('http://localhost:3001/persons', personObject).then((response) => {
+      setPersons(persons.concat(response.data))
+      setNewName('')
+      setNewNumber('')
+    })
   }
 
 const handleFilterChange =(event) => setFilter(event.target.value)
