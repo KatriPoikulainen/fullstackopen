@@ -62,16 +62,34 @@ const [newNumber, setNewNumber] = useState ('')
   const addPerson = (event) => {
     event.preventDefault()
 
-    const nameExists = persons.some((person) => person.name === newName)
-    if (nameExists) {
-      alert(`${newName} is already added to phonebook`)
+    const name = newName.trim()
+    const number = newNumber.trim()
+
+    const existingPerson = persons.find((person)=> person.name === name)
+
+    if (existingPerson) {
+      const ok = window.confirm(
+        `${name} is already added to phonebook, replace the old number with a new one?`
+      )
+      if (!ok) {
+        return
+      }
+      const updatedPerson = {...existingPerson, number}
+
+      noteService.update(existingPerson.id, updatedPerson).then((response) => {
+        setPersons(
+          persons.map((p) => (p.id !== existingPerson.id ? p : response.data))
+      ) 
+      setNewName('')
+      setNewNumber('')
+      })
       return
     }
 
 
     const personObject = {
-      name: newName,
-      number: newNumber
+      name: name,
+      number: number
     }
 
 
@@ -83,7 +101,7 @@ const [newNumber, setNewNumber] = useState ('')
   }
 
       
-    const deletePerson = (id) => {
+  const deletePerson = (id) => {
   const person = persons.find(p => p.id === id)
   if (!person) return
   const ok = window.confirm(
