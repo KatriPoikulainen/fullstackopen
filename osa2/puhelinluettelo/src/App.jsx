@@ -67,8 +67,8 @@ const showNotification = (message, type) => {
 }
 
   useEffect(()=> {
-    noteService.getAll().then((response) => {
-      setPersons(response.data)
+    noteService.getAll().then((initialPersons) => {
+      setPersons(initialPersons)
     })
   }, [])
 
@@ -85,33 +85,10 @@ const showNotification = (message, type) => {
 
     const existingPerson = persons.find((p)=> p.name === name)
 
-    if (existingPerson) {
-      const ok = window.confirm(
-        `${name} is already added to phonebook, replace the old number with a new one?`
-      )
-      if (!ok) return
-
-      const updatedPerson = {...existingPerson, number}
-
-      noteService
-      .update(existingPerson.id, updatedPerson)
-      .then((response) => {
-      setPersons(
-      persons.map((p) => (p.id !== existingPerson.id ? p : response.data))
-      )
-      setNewName('')
-      setNewNumber('')
-      showNotification(`Updated ${response.data.name}`, 'success')
-    })
-      .catch ((error) => {
-          showNotification(
-            `Information of '${existingPerson.name}' was already removed from server`,
-            'error'
-          )
-        setPersons(persons.filter((p) => p.id !== existingPerson.id))
-      })
-      return
-    }
+if (existingPerson) {
+  showNotification('Name must be unique', 'error')
+  return
+}
 
 
     const personObject = {
@@ -122,11 +99,11 @@ const showNotification = (message, type) => {
 
     noteService
     .create(personObject)
-    .then((response) => {
-      setPersons(persons.concat(response.data))
+    .then((createdPerson) => {
+      setPersons(persons.concat(createdPerson))
       setNewName('')
       setNewNumber('')
-        showNotification(`Added ${response.data.name}`, 'success')
+        showNotification(`Added ${createdPerson.name}`, 'success')
       })
       .catch((error) => {
         showNotification('Adding a person failed', 'error')
